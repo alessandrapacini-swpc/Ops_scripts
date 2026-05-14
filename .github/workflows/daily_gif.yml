@@ -30,7 +30,7 @@ jobs:
         # This line points directly to the file you just created
         run: python ccorgifcreator.py
 
-- name: Commit and Push the new GIF
+      - name: Commit and Push the new GIF
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
