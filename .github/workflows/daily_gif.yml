@@ -1,0 +1,39 @@
+name: Update NOAA GIF
+
+on:
+  schedule:
+    # Runs at 14:00 UTC (7:00 AM MST / 8:00 AM MDT)
+    - cron: '0 14 * * *'
+  workflow_dispatch: # This creates the manual "play" button
+
+permissions:
+  contents: write # This allows the bot to save the GIF back to your repository
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 Pillow
+
+      - name: Run GIF Generator
+        # This line points directly to the file you just created
+        run: python ccorgifcreator.py
+
+      - name: Commit and Push the new GIF
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add noaa_ccor1_animation.gif
+          git commit -m "Automated daily GIF update" || echo "No changes to commit"
+          git push
